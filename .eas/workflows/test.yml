@@ -1,0 +1,11 @@
+name: Test Trigger
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test:
+    name: Test
+    type: command
+    command: echo "Triggered successfully"
