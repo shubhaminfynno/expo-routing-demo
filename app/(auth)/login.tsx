@@ -54,9 +54,6 @@ export default function LoginScreen() {
     <ThemedView style={styles.container}>
       <ThemedView style={styles.card}>
         <ThemedText style={styles.title}>Static auth demo</ThemedText>
-        <ThemedText style={styles.title}>
-          Dummy commit text for EAS build
-        </ThemedText>
 
         <TextInput
           value={email}
