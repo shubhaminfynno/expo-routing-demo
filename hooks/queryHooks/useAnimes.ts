@@ -7,8 +7,6 @@ export function useAnimes() {
     queryKey: ["animes"],
     queryFn: async () => {
       const data = await graphQLClientAnimes.request(GET_ANIMES);
-      console.log("AniList Data:", data);
-
       return data.Page.media;
     },
   });

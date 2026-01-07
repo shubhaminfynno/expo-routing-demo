@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
@@ -11,19 +11,33 @@ import { useAuth } from "@/providers/AuthProvider";
 import { User } from "@/types";
 
 export default function LoginScreen() {
-  const { signIn } = useAuth();
+  const {
+    signIn,
+    // authenticateWithBiometrics,
+    // isBiometricAvailable,
+    // biometricType,
+    activeUser,
+  } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const disableSubmit = !email || !password;
 
   const [users, setUsers] = useState<User[]>([]);
-
   const [error, setError] = useState("");
+  const [showBiometricOption, setShowBiometricOption] = useState(false);
 
   useEffect(() => {
     const loadUsers = async () => {
       const storedUsers = await getUsers();
       setUsers(storedUsers || []);
+
+      // Check if there's a user with Face ID enabled
+      // const userWithBiometrics = storedUsers?.find(
+      //   (user: User) => user.faceIdEnabled
+      // );
+      // setShowBiometricOption(
+      //   Boolean(userWithBiometrics && isBiometricAvailable)
+      // );
     };
     loadUsers();
   }, []);
@@ -49,6 +63,35 @@ export default function LoginScreen() {
 
     await signIn(user);
   };
+
+  // const handleBiometricLogin = async () => {
+  //   setError("");
+
+  //   try {
+  //     const success = await authenticateWithBiometrics();
+  //     if (success) {
+  //       // Find the user with Face ID enabled and sign them in
+  //       const userWithBiometrics = users.find(
+  //         (user: User) => user.faceIdEnabled
+  //       );
+  //       if (userWithBiometrics) {
+  //         await signIn(userWithBiometrics);
+  //       }
+  //     } else {
+  //       Alert.alert(
+  //         "Authentication Failed",
+  //         `${biometricType} authentication was cancelled or failed.`,
+  //         [{ text: "OK" }]
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Alert.alert(
+  //       "Error",
+  //       "An error occurred during biometric authentication.",
+  //       [{ text: "OK" }]
+  //     );
+  //   }
+  // };
 
   return (
     <ThemedView style={styles.container}>
@@ -106,13 +149,28 @@ export default function LoginScreen() {
           <ThemedText style={styles.primaryButtonLabel}>Continue</ThemedText>
         </TouchableOpacity>
 
-        <Link href="/(auth)/register" replace asChild>
-          <TouchableOpacity>
-            <ThemedText style={styles.linkText}>
-              Need an account? Create one
+        {/* {showBiometricOption && (
+          <TouchableOpacity
+            style={styles.biometricButton}
+            onPress={handleBiometricLogin}
+            activeOpacity={0.8}
+          >
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={24}
+              color="#2563eb"
+            />
+            <ThemedText style={styles.biometricButtonLabel}>
+              Sign in with {biometricType}
             </ThemedText>
           </TouchableOpacity>
-        </Link>
+        )} */}
+
+        <TouchableOpacity onPress={() => router.replace("/(auth)/register")}>
+          <ThemedText style={styles.linkText}>
+            Need an account? Create one
+          </ThemedText>
+        </TouchableOpacity>
       </ThemedView>
     </ThemedView>
   );
@@ -159,6 +217,23 @@ const styles = StyleSheet.create({
   },
   primaryButtonLabel: {
     color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  biometricButton: {
+    marginTop: 12,
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#2563eb",
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
+  },
+  biometricButtonLabel: {
+    color: "#2563eb",
     fontWeight: "600",
     fontSize: 16,
   },

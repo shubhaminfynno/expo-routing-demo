@@ -25,6 +25,10 @@ type AuthContextValue = {
   signOut: () => Promise<void>;
   signOutAndClear: () => Promise<void>;
   markVerified: () => Promise<void>;
+  // authenticateWithBiometrics: () => Promise<boolean>;
+  // toggleFaceId: (enabled: boolean) => Promise<void>;
+  // isBiometricAvailable: boolean;
+  // biometricType: string;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -33,6 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeUser, setActiveUser] = useState<User | null>(null);
+  // const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
+  // const [biometricType, setBiometricType] = useState<string>(
+  //   "Biometric Authentication"
+  // );
 
   useEffect(() => {
     const hydrateSession = async () => {
@@ -41,6 +49,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setActiveUser(storedUser);
         setIsSignedIn(true);
       }
+
+      // // Check biometric availability
+      // const isAvailable = await faceIdService.isAvailable();
+      // setIsBiometricAvailable(isAvailable);
+
+      // if (isAvailable) {
+      //   const primaryBiometricName =
+      //     await faceIdService.getPrimaryBiometricName();
+      //   setBiometricType(primaryBiometricName);
+      // }
+
       setIsLoaded(true);
     };
     hydrateSession();
@@ -89,6 +108,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await syncUserStore(updatedUser);
   }, [activeUser, syncUserStore]);
 
+  // const authenticateWithBiometrics = useCallback(async (): Promise<boolean> => {
+  //   if (!activeUser?.faceIdEnabled || !isBiometricAvailable) {
+  //     return false;
+  //   }
+
+  //   try {
+  //     const result = await faceIdService.authenticate(
+  //       `Use ${biometricType} to sign in to your account`
+  //     );
+  //     return result.success;
+  //   } catch (error) {
+  //     console.error("Biometric authentication failed:", error);
+  //     return false;
+  //   }
+  // }, [activeUser?.faceIdEnabled, isBiometricAvailable, biometricType]);
+
+  // const toggleFaceId = useCallback(
+  //   async (enabled: boolean) => {
+  //     if (!activeUser) return;
+
+  //     // If enabling Face ID, require authentication first
+  //     if (enabled && isBiometricAvailable) {
+  //       const result = await faceIdService.authenticate(
+  //         `Enable ${biometricType} for future sign-ins`
+  //       );
+  //       if (!result.success) {
+  //         throw new Error("Authentication required to enable biometric login");
+  //       }
+  //     }
+
+  //     const updatedUser = { ...activeUser, faceIdEnabled: enabled };
+  //     setActiveUser(updatedUser);
+  //     await setItemInStorage("activeUser", updatedUser);
+  //     await syncUserStore(updatedUser);
+  //   },
+  //   [activeUser, isBiometricAvailable, biometricType, syncUserStore]
+  // );
+
   const value = useMemo(
     () => ({
       isSignedIn,
@@ -99,6 +156,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoaded,
       signOutAndClear,
       markVerified,
+      // authenticateWithBiometrics,
+      // toggleFaceId,
+      // isBiometricAvailable,
+      // biometricType,
     }),
     [
       isSignedIn,
@@ -108,6 +169,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoaded,
       signOutAndClear,
       markVerified,
+      // authenticateWithBiometrics,
+      // toggleFaceId,
+      // isBiometricAvailable,
+      // biometricType,
     ]
   );
 

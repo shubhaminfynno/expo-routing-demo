@@ -44,6 +44,9 @@ const AccountScreen = () => {
           Account Details
         </ThemedText>
       </ThemedView>
+
+      {/* <FaceIdSettings containerStyle={styles.faceIdContainer} /> */}
+
       <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
       <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} />
 
@@ -73,5 +76,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",
     gap: 8,
+  },
+  faceIdContainer: {
+    marginVertical: 16,
   },
 });

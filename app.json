@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "routing-expo",
-    "slug": "routing-expo",
+    "name": "QuizApp",
+    "slug": "quizapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "routingexpo",
+    "scheme": "quizapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -44,7 +44,13 @@
           }
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow QuizApp to use Face ID."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

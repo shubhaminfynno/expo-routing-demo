@@ -3,7 +3,12 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { Stack, useRootNavigationState, useRouter } from "expo-router";
+import {
+  Stack,
+  usePathname,
+  useRootNavigationState,
+  useRouter,
+} from "expo-router";
 import "react-native-reanimated";
 
 import { ThemedView } from "@/components/themed-view";
@@ -33,16 +38,19 @@ export default function RootLayout() {
 function RootStack() {
   const { isSignedIn, isLoaded, isVerified } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const navigationState = useRootNavigationState();
 
   useEffect(() => {
     if (!isLoaded) return;
     if (!navigationState?.key) return;
 
+    if (pathname === "/(modal)/lock" || pathname === "/(modal)/overlay") return;
+
     if (!isSignedIn) {
       router.replace("/(auth)/login");
     } else if (!isVerified) {
-      router.replace("/(auth)/verification");
+      router.replace("/verification");
     } else {
       router.replace("/");
     }
@@ -57,67 +65,85 @@ function RootStack() {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator size="large" />
       </ThemedView>
     );
   }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(drawer)" />
-      <Stack.Screen
-        name="modal"
-        options={{ presentation: "modal", headerShown: true }}
-      />
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen
-        name="tictactoe"
-        options={{
-          headerShown: true,
-          title: "Tic Tac Toe",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="countryQuiz"
-        options={{
-          headerShown: true,
-          title: "Country Quiz",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="postDetails"
-        options={{
-          headerShown: true,
-          title: "Post Details",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="animeDetails"
-        options={{
-          headerShown: true,
-          title: "Anime Details",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="graphqlZero"
-        options={{
-          headerShown: true,
-          title: "GraphQL Demo",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="flashList"
-        options={{
-          headerShown: true,
-          title: "FlashList Demo",
-          headerBackTitle: "Back",
-        }}
-      />
+      <Stack.Protected guard={!isSignedIn}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!isVerified}>
+        <Stack.Screen name="verification" />
+      </Stack.Protected>
+      <Stack.Protected guard={isSignedIn && isVerified}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(drawer)" />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: "modal", headerShown: true }}
+        />
+        <Stack.Screen
+          name="tictactoe"
+          options={{
+            headerShown: true,
+            title: "Tic Tac Toe",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="countryQuiz"
+          options={{
+            headerShown: true,
+            title: "Country Quiz",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="postDetails"
+          options={{
+            headerShown: true,
+            title: "Post Details",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="animeDetails"
+          options={{
+            headerShown: true,
+            title: "Anime Details",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="graphqlZero"
+          options={{
+            headerShown: true,
+            title: "GraphQL Demo",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="flashList"
+          options={{
+            headerShown: true,
+            title: "FlashList Demo",
+            headerBackTitle: "Back",
+          }}
+        />
+
+        <Stack.Screen name="lock" />
+        <Stack.Screen
+          name="overlay"
+          options={{
+            presentation: "transparentModal",
+            gestureEnabled: false,
+            animation: "fade",
+          }}
+        />
+      </Stack.Protected>
     </Stack>
   );
 }

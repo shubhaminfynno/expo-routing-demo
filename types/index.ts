@@ -14,6 +14,7 @@ export type User = {
   password: string;
   isAuthenticated: boolean;
   isVerified: boolean;
+  // faceIdEnabled?: boolean;
 };
 
 export type ContainerProps = {

@@ -2,7 +2,6 @@ import Button from "@/components/button/Button";
 import { ThemedText } from "@/components/themed-text";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "expo-router";
-import React from "react";
 import { View } from "react-native";
 
 const VerificationScreen = () => {

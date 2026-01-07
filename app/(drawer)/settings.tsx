@@ -7,6 +7,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
+  const { isSignedIn } = useAuth();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(
     colorScheme === "dark"
@@ -30,6 +31,15 @@ export default function SettingsScreen() {
         <ThemedText type="defaultSemiBold">Dark Mode</ThemedText>
         <Switch value={darkModeEnabled} onValueChange={setDarkModeEnabled} />
       </ThemedView>
+      {/* 
+      {isSignedIn && (
+        <ThemedView style={styles.section}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Security
+          </ThemedText>
+          <FaceIdSettings />
+        </ThemedView>
+      )} */}
 
       <ThemedView style={styles.section}>
         <ThemedText type="subtitle">About</ThemedText>
@@ -61,5 +71,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     borderTopWidth: 1,
     borderTopColor: "#eee",
+  },
+  sectionTitle: {
+    marginBottom: 16,
   },
 });
