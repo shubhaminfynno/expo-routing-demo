@@ -48,8 +48,8 @@ const AccountScreen = () => {
 
       <FaceIdSettings containerStyle={styles.faceIdContainer} />
 
-      <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
-      <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} />
+      {/* <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
+      <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} /> */}
 
       <View style={{ flex: 1 }}>
         <ButtonComponent title={"Sign out"} onPress={signOut} />
