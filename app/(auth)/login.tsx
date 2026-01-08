@@ -1,6 +1,7 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -13,9 +14,9 @@ import { User } from "@/types";
 export default function LoginScreen() {
   const {
     signIn,
-    // authenticateWithBiometrics,
-    // isBiometricAvailable,
-    // biometricType,
+    loginWithBiometrics,
+    isBiometricAvailable,
+    biometricType,
     activeUser,
   } = useAuth();
   const [email, setEmail] = useState("");
@@ -32,15 +33,15 @@ export default function LoginScreen() {
       setUsers(storedUsers || []);
 
       // Check if there's a user with Face ID enabled
-      // const userWithBiometrics = storedUsers?.find(
-      //   (user: User) => user.faceIdEnabled
-      // );
-      // setShowBiometricOption(
-      //   Boolean(userWithBiometrics && isBiometricAvailable)
-      // );
+      const userWithBiometrics = storedUsers?.find(
+        (user: User) => user.faceIdEnabled
+      );
+      setShowBiometricOption(
+        Boolean(userWithBiometrics && isBiometricAvailable)
+      );
     };
     loadUsers();
-  }, []);
+  }, [isBiometricAvailable]);
 
   const inputBorder = useThemeColor({}, "border");
   const inputBg = useThemeColor(
@@ -64,34 +65,26 @@ export default function LoginScreen() {
     await signIn(user);
   };
 
-  // const handleBiometricLogin = async () => {
-  //   setError("");
+  const handleBiometricLogin = async () => {
+    setError("");
 
-  //   try {
-  //     const success = await authenticateWithBiometrics();
-  //     if (success) {
-  //       // Find the user with Face ID enabled and sign them in
-  //       const userWithBiometrics = users.find(
-  //         (user: User) => user.faceIdEnabled
-  //       );
-  //       if (userWithBiometrics) {
-  //         await signIn(userWithBiometrics);
-  //       }
-  //     } else {
-  //       Alert.alert(
-  //         "Authentication Failed",
-  //         `${biometricType} authentication was cancelled or failed.`,
-  //         [{ text: "OK" }]
-  //       );
-  //     }
-  //   } catch (error) {
-  //     Alert.alert(
-  //       "Error",
-  //       "An error occurred during biometric authentication.",
-  //       [{ text: "OK" }]
-  //     );
-  //   }
-  // };
+    try {
+      const success = await loginWithBiometrics();
+      if (!success) {
+        Alert.alert(
+          "Authentication Failed",
+          `${biometricType} authentication was cancelled or failed.`,
+          [{ text: "OK" }]
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        "An error occurred during biometric authentication.",
+        [{ text: "OK" }]
+      );
+    }
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -149,7 +142,7 @@ export default function LoginScreen() {
           <ThemedText style={styles.primaryButtonLabel}>Continue</ThemedText>
         </TouchableOpacity>
 
-        {/* {showBiometricOption && (
+        {showBiometricOption && (
           <TouchableOpacity
             style={styles.biometricButton}
             onPress={handleBiometricLogin}
@@ -164,7 +157,7 @@ export default function LoginScreen() {
               Sign in with {biometricType}
             </ThemedText>
           </TouchableOpacity>
-        )} */}
+        )}
 
         <TouchableOpacity onPress={() => router.replace("/(auth)/register")}>
           <ThemedText style={styles.linkText}>

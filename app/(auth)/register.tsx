@@ -1,6 +1,7 @@
+import { faceIdService } from "@/services/biometricService";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -10,7 +11,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { User } from "@/types";
 
 export default function RegisterScreen() {
-  const { signIn } = useAuth();
+  const { signIn, isBiometricAvailable, biometricType } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +34,39 @@ export default function RegisterScreen() {
       isVerified: false,
     };
 
-    await signIn(newUser);
+    if (isBiometricAvailable) {
+      Alert.alert(
+        `Enable ${biometricType}`,
+        `Would you like to enable ${biometricType} for faster login?`,
+        [
+          {
+            text: "Later",
+            style: "cancel",
+            onPress: async () => {
+              await signIn(newUser);
+            },
+          },
+          {
+            text: "Enable",
+            onPress: async () => {
+              try {
+                const result = await faceIdService.authenticate(
+                  `Authenticate to enable ${biometricType}`
+                );
+                if (result.success) {
+                  newUser.faceIdEnabled = true;
+                }
+              } catch (error) {
+                console.error("Biometric setup failed:", error);
+              }
+              await signIn(newUser);
+            },
+          },
+        ]
+      );
+    } else {
+      await signIn(newUser);
+    }
   };
 
   return (

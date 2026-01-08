@@ -80,7 +80,6 @@ function RootStack() {
       </Stack.Protected>
       <Stack.Protected guard={isSignedIn && isVerified}>
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(drawer)" />
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", headerShown: true }}

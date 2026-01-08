@@ -1,4 +1,5 @@
 import ButtonComponent from "@/components/Button";
+import FaceIdSettings from "@/components/FaceIdSettings";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -45,7 +46,7 @@ const AccountScreen = () => {
         </ThemedText>
       </ThemedView>
 
-      {/* <FaceIdSettings containerStyle={styles.faceIdContainer} /> */}
+      <FaceIdSettings containerStyle={styles.faceIdContainer} />
 
       <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
       <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} />

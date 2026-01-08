@@ -1,15 +1,33 @@
 import Button from "@/components/button/Button";
 import { ThemedText } from "@/components/themed-text";
+import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 const LockScreen = () => {
   const router = useRouter();
+  const { authenticateWithBiometrics, isBiometricAvailable, biometricType, activeUser } = useAuth();
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const handleUnlock = () => {
-    // Navigate back to the previous screen
-    router.back();
+  const handleUnlock = async () => {
+    if (isBiometricAvailable && activeUser?.faceIdEnabled) {
+      setIsAuthenticating(true);
+      const success = await authenticateWithBiometrics();
+      setIsAuthenticating(false);
+      if (success) {
+        router.back();
+      }
+    } else {
+      router.back();
+    }
   };
+
+  useEffect(() => {
+    if (isBiometricAvailable && activeUser?.faceIdEnabled) {
+      handleUnlock();
+    }
+  }, [isBiometricAvailable, activeUser?.faceIdEnabled]);
 
   return (
     <View style={styles.container}>
@@ -18,7 +36,11 @@ const LockScreen = () => {
         <ThemedText style={styles.subtitle}>
           The app was locked due to inactivity
         </ThemedText>
-        <Button title="Unlock" onPress={handleUnlock} />
+        <Button 
+          title={isBiometricAvailable && activeUser?.faceIdEnabled ? `Unlock with ${biometricType}` : "Unlock"} 
+          onPress={handleUnlock}
+          isLoading={isAuthenticating}
+        />
       </View>
     </View>
   );

@@ -86,7 +86,7 @@ export default function TabLayout() {
     >
       <NativeTabs.Trigger name="index">
         <Label>Home</Label>
-        <Icon sf={{ default: "house", selected: "house.fill" }} />
+        <Icon sf="house.fill" drawable="ic_menu_home" />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="game">

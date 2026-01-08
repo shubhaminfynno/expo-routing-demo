@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { StyleSheet, Switch } from "react-native";
 
+import FaceIdSettings from "@/components/FaceIdSettings";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
@@ -31,7 +33,6 @@ export default function SettingsScreen() {
         <ThemedText type="defaultSemiBold">Dark Mode</ThemedText>
         <Switch value={darkModeEnabled} onValueChange={setDarkModeEnabled} />
       </ThemedView>
-      {/* 
       {isSignedIn && (
         <ThemedView style={styles.section}>
           <ThemedText type="subtitle" style={styles.sectionTitle}>
@@ -39,7 +40,7 @@ export default function SettingsScreen() {
           </ThemedText>
           <FaceIdSettings />
         </ThemedView>
-      )} */}
+      )}
 
       <ThemedView style={styles.section}>
         <ThemedText type="subtitle">About</ThemedText>

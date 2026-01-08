@@ -149,11 +149,7 @@ const AnimeScreen = () => {
 
       <LegendList
         data={legendData}
-        keyExtractor={(item, index) =>
-          item.type === "anime"
-            ? String(item.anime.id)
-            : `header-${item.title}-${index}`
-        }
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingBottom: 40 }}
         scrollEnabled={false}
         renderItem={({ item }) => {
