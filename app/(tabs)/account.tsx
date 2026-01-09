@@ -15,6 +15,10 @@ const AccountScreen = () => {
     router.push("/graphqlZero");
   };
 
+  const onRecordVideo = () => {
+    router.push("/recordVideo");
+  };
+
   const onPressFlashList = () => {
     router.push("/flashList");
   };
@@ -47,6 +51,7 @@ const AccountScreen = () => {
       </ThemedView>
 
       <FaceIdSettings containerStyle={styles.faceIdContainer} />
+      <ButtonComponent title={"Record a video"} onPress={onRecordVideo} />
 
       {/* <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
       <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} /> */}

@@ -134,6 +134,7 @@ function RootStack() {
         />
 
         <Stack.Screen name="lock" />
+        <Stack.Screen name="recordVideo" />
         <Stack.Screen
           name="overlay"
           options={{
