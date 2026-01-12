@@ -19,6 +19,10 @@ const AccountScreen = () => {
     router.push("/recordVideo");
   };
 
+  const onScan = () => {
+    router.push("/scanner");
+  };
+
   const onPressFlashList = () => {
     router.push("/flashList");
   };
@@ -52,6 +56,7 @@ const AccountScreen = () => {
 
       <FaceIdSettings containerStyle={styles.faceIdContainer} />
       <ButtonComponent title={"Record a video"} onPress={onRecordVideo} />
+      <ButtonComponent title={"Scan a QR"} onPress={onScan} />
 
       {/* <ButtonComponent title={"FlashList"} onPress={onPressFlashList} />
       <ButtonComponent title={"GraphQL"} onPress={onPressGraphQL} /> */}
