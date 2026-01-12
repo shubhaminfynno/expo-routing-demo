@@ -8,6 +8,7 @@ import {
   useCameraPermissions,
   useMicrophonePermissions,
 } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import { router } from "expo-router";
 import * as Sharing from "expo-sharing";
@@ -145,6 +146,35 @@ const RecordVideo = () => {
       await Sharing.shareAsync(videoUri);
     } else {
       Alert.alert("Error", "Sharing is not available on this device");
+    }
+  };
+
+  const openGallery = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: "videos",
+        allowsEditing: false,
+        quality: 1,
+        videoMaxDuration: 15000,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const asset = result.assets[0];
+
+        if (asset.duration && asset.duration > 15000) {
+          Alert.alert(
+            "Video too long",
+            "Please select a video that is 15 seconds or shorter."
+          );
+          return;
+        }
+
+        setVideoUri(asset.uri);
+        setDuration(Math.floor((asset.duration || 0) / 1000));
+      }
+    } catch (error) {
+      console.error("Error picking video:", error);
+      Alert.alert("Error", "Failed to select video from gallery");
     }
   };
 
@@ -311,7 +341,7 @@ const RecordVideo = () => {
         {!isRecordingMode && (
           <RoundIconButton
             icon={<Ionicons name="image" size={24} color="#fff" />}
-            onPress={() => {}}
+            onPress={openGallery}
             size={52}
             title="Gallery"
           />
